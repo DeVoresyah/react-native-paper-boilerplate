@@ -1,9 +1,12 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text } from 'react-native'
+
+// styles
+import globalStyles from '../styles/globalStyles';
 
 const CategoriesScreens = () => {
     return (
-        <View style={styles.container}>
+        <View style={globalStyles.container}>
             <Text>Hello Categories</Text>
         </View>
     )
@@ -21,10 +24,3 @@ CategoriesScreens.options = {
 }
 
 export default CategoriesScreens
-
-const styles = StyleSheet.create({
-    container: {
-        paddingVertical: 10,
-        paddingHorizontal: 20
-    }
-})

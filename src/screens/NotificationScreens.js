@@ -1,33 +1,38 @@
 import React, { useEffect, useState } from 'react'
-import { Navigation } from 'react-native-navigation'
-import { View, Text, StyleSheet, TouchableHighlight, FlatList } from 'react-native'
+import { View, Text, TouchableHighlight, FlatList } from 'react-native'
 import { connect } from 'react-redux'
+import { Navigation } from 'react-native-navigation'
+
+// styles
+import globalStyles from '../styles/globalStyles';
+import styles from './styles/NotificationScreenStyle';
+import { apply } from '../styles/osmiProvider';
 
 const NotificationScreens = ({ token, componentId }) => {
-
     const [data, setData] = useState(null)
 
     const getData = async() => {
         await fetch('https://jsonplaceholder.typicode.com/posts')
-                .then(res => {
-                    res.json().then(dt => setData(dt))
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+        .then(res => {
+            res.json().then(dt => setData(dt))
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
 
+    // TODO: better to make this as reusable component with `memo` hooks.
     const renderItem = (items) => {
-        const {item } = items
+        const { item } = items
+
         return(
-            <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 6 }}>
+            <View style={apply('row items-center py-1')}>
                 <Text>{item.title}</Text>
             </View>
         )
     }
 
     useEffect(() => {
-
         const listener = {
             componentDidAppear: () => {
                 getData()
@@ -36,28 +41,27 @@ const NotificationScreens = ({ token, componentId }) => {
                 setData(null)
             }
         }
+
         const unsubscribe = Navigation.events().registerComponentListener(listener, componentId);
+
         return () => {
             unsubscribe.remove();
         };
-      
     },[])
-    
+
     return (
-        <View style={styles.container}>
+        <View style={globalStyles.container}>
             <TouchableHighlight
-                style={styles.button}
-                onPress={() => {}}
-                underlayColor="#003f88"
-            >
+            style={styles.button}
+            onPress={() => {}}
+            underlayColor="#003f88">
                 <Text style={styles.buttonText}>Show token</Text>
             </TouchableHighlight>
+
             <Text>{token}</Text>
 
             <FlatList
-                style={{
-                    flexGrow: 1,
-                }}
+                style={apply("flex-grow")}
                 data={data}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderItem}
@@ -85,23 +89,4 @@ const mapStateToProps = (state) => {
 
 
 export default connect(mapStateToProps)(NotificationScreens)
-
-
-const styles = StyleSheet.create({
-    container: {
-        paddingVertical: 10,
-        paddingHorizontal: 20
-    },
-    button: {
-        backgroundColor: '#00509d',
-        paddingVertical: 16,
-        paddingHorizontal: 14,
-        borderRadius: 6,
-        marginTop: 10
-    },
-    buttonText: {
-        color: '#fff',
-        textAlign: 'center'
-    }
-})
 

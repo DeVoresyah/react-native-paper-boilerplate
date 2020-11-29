@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableHighlight } from 'react-native'
+import { View, Text, TextInput, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
+import { saveToken } from '../redux/actions/token'
 import { Navigation } from 'react-native-navigation'
 
+// component
 import { Button } from 'react-native-paper'
 
-import { saveToken } from '../redux/actions/token'
+// styles
+import globalStyles from '../styles/globalStyles';
+import styles from './styles/HomeScreenStyle'
+import { apply } from '../styles/osmiProvider';
 
 const HomeScreens = ({ addToken, componentId }) => {
-
     const [text, setText] = useState(null)
 
     const tokenHandler = () => {
@@ -16,8 +20,23 @@ const HomeScreens = ({ addToken, componentId }) => {
         setText(null)
     }
 
+    const _handleNavigate = () => {
+        Navigation.push(componentId, {
+            component: {
+                name: 'List'
+            },
+            options: {
+                topBar: {
+                    title: {
+                        text: 'List'
+                    }
+                }
+            }
+        })
+    }
+
     return (
-        <View style={styles.container}>
+        <View style={globalStyles.container}>
             <TextInput
                 style={styles.textInput}
                 placeholder="write token"
@@ -25,32 +44,16 @@ const HomeScreens = ({ addToken, componentId }) => {
                 value={text}
             />
             <TouchableHighlight
-                style={styles.button}
-                onPress={tokenHandler}
-                underlayColor="#d62828"
-            >
+            style={styles.button}
+            onPress={tokenHandler}
+            underlayColor="#d62828">
                 <Text style={styles.buttonText}>Save token</Text>
             </TouchableHighlight>
             <Button
-                style={{
-                    marginTop: 20
-                }}
-                icon="add-shopping-cart"
-                mode="contained"
-                onPress={() => {
-                    Navigation.push(componentId, {
-                        component: {
-                            name: 'List'
-                        },
-                        options: {
-                            topBar: {
-                                title: {
-                                    text: 'List'
-                                }
-                            }
-                        }
-                    })
-                }}>
+            style={apply('mt-5')}
+            icon="add-shopping-cart"
+            mode="contained"
+            onPress={() => _handleNavigate()}>
                 Go to Lists
             </Button>
         </View>
@@ -76,29 +79,3 @@ const mapDispatchToProps = (dispatch) => {
 
 
 export default connect(0, mapDispatchToProps)(HomeScreens)
-
-
-const styles = StyleSheet.create({
-    container: {
-        paddingVertical: 10,
-        paddingHorizontal: 20
-    },
-    textInput: {
-        borderWidth: 1,
-        borderColor: 'red',
-        borderColor: '#6c757d',
-        padding: 10,
-        borderRadius: 6
-    },
-    button: {
-        backgroundColor: '#e63946',
-        paddingVertical: 16,
-        paddingHorizontal: 14,
-        borderRadius: 6,
-        marginTop: 10
-    },
-    buttonText: {
-        color: '#fff',
-        textAlign: 'center'
-    }
-})

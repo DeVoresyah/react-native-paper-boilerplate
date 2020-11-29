@@ -1,9 +1,5 @@
-import { StyleSheet } from 'react-native'
+import { connect } from './osmiProvider';
 
-
-export const globalStyle = StyleSheet.create({
-    container: {
-        paddingVertical: 10,
-        paddingHorizontal: 20
-    }
+export default connect({
+    container: "py-2 px-5"
 })
